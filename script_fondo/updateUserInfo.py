@@ -5,21 +5,29 @@ import sys
 
 load = 0
 inf_users = []
-domain="http://192.168.0.15:8181/"
+user = ''
+password = ''
+host = ''
+domain="http://"+user+":"+password+"@"+host+":8181/"
 
 def loadFile():
-    f = open(sys.argv[1],"r")
-    for line in f:
-        data = line.strip().split("\t")
-        id = data[0].split()[0]
-        balance = data[1].split()[1]
-        quota = data[2].split()[1]
-        contributions = data[3].split()[1]
-        valueCredits = data[4].split()[1]
-        inf_users.append([id,balance,quota,contributions,valueCredits])
-    global load
-    load = 1
-    f.close()
+    if len(sys.argv) == 2:
+        try:
+            f = open(sys.argv[1],"r")
+        except FileNotFoundError as err:
+            print("ERROR: File not found")
+            return
+        for line in f:
+            data = line.strip().split("\t")
+            id = data[0].split()[0]
+            balance = data[1].split()[1]
+            quota = data[2].split()[1]
+            contributions = data[3].split()[1]
+            valueCredits = data[4].split()[1]
+            inf_users.append([id,balance,quota,contributions,valueCredits])
+        global load
+        load = 1
+        f.close()
 
 def amountCredits(id):
     r = requests.get(domain + "requests/getByIdMemberState/%i" % id)
