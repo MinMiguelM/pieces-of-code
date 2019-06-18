@@ -2,28 +2,36 @@
 Input a list.
 Output a sorted list."""
 
-def partition(array,s,l):
-	pivot = l
-	start = s
-	while start!=pivot:
-		if array[start] > array[pivot]:
-			aux = array[start]
-			array[start] = array[pivot-1]
-			array[pivot-1] = array[pivot]
-			array[pivot] = aux
-			pivot -= 1
-		else:
-			start += 1
-	return pivot
+def partition(array, left, right, pivot):
+	while left <= right:
+		while array[left] < pivot:
+			left += 1
+		while array[right] > pivot:
+			right -= 1
+		if left <= right:
+			tmp = array[left]
+			array[left] = array[right]
+			array[right] = tmp
+			left += 1
+			right -= 1
+	return left 
 
-def quicksort(array,s,l):
-	if s < l:
-		p = partition(array,s,l)
-		quicksort(array,s,p-1)
-		quicksort(array,p+1,l)
-		return array
-	return array
+def quicksortHelper(array, left, right):
+	if left >= right:
+		return
+
+	pivot = array[(left + right) // 2]
+	index = partition(array, left, right, pivot)
+	quicksortHelper(array, left, index - 1)
+	quicksortHelper(array, index, right)
+
+def quicksort(array):
+	if len(array) <= 1:
+		return
+	quicksortHelper(array, 0, len(array) - 1)
+	
 	
 
 test = [5,7,2,8,9,10,1,85,0,12]
-print quicksort(test,0,len(test)-1)
+quicksort(test)
+print(test)
